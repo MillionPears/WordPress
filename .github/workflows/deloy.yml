@@ -30,7 +30,7 @@ jobs:
 
     - name: Deploy to XAMPP
       run: |
-        rsync -avz --delete ./ C:/xampp/htdocs/wordpress/
+        rsync -avz --delete ./ /c/xampp/htdocs/wordpress/
     - name: Reload Nginx
       run: |
         sudo systemctl reload nginx  # Khởi động lại Nginx để áp dụng thay đổi
