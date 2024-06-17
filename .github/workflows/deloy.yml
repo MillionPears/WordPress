@@ -23,7 +23,7 @@ jobs:
 
     - name: Prepare WordPress configuration
       run: |
-        cp wp-config-sample.php wp-config.php
+        cp wp-config.php wp-config.php
         sed -i "s/database_name_here/wordpress_db/g" wp-config.php
         sed -i "s/username_here/root/g" wp-config.php
         sed -i "s/password_here//g" wp-config.php
