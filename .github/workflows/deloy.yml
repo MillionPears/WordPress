@@ -29,8 +29,8 @@ jobs:
         sed -i "s/localhost/localhost/g" wp-config.php
 
     - name: Deploy to XAMPP
-      run: |
-        rsync -avz --delete ./ /C/xampp/htdocs/wordpress/
+      
+
     - name: Reload Nginx
       run: |
         sudo systemctl reload nginx  # Khởi động lại Nginx để áp dụng thay đổi
