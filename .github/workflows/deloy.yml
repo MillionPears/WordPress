@@ -30,11 +30,5 @@ jobs:
         sed -i "s/localhost/localhost/g" wp-config.php
     
 
-    - name: Deploy to XAMPP
-      run: |
-        rsync -avzR   . /c/xampp/htdocs/wordpress/
-  
-    - name: Reload Nginx
-      run: |
-        nginx -s reload
+    
 
