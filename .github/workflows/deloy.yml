@@ -1,34 +1,31 @@
-name: Deploy WordPress
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Chạy khi có push lên nhánh main
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
 
-    - name: Install Composer dependencies
-      run: composer install
-    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
 
-    - name: Replace database configuration in wp-config.php
-      run: |
-        sed -i "s/database_name_here/wordpress_db/g" wp-config.php
-        sed -i "s/username_here/root/g" wp-config.php
-        sed -i "s/password_here//g" wp-config.php
-        sed -i "s/localhost/localhost/g" wp-config.php
-    
-
-    
-
+      - name: Run flake8
+        run: |
+          flake8 .
