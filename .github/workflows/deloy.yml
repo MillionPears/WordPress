@@ -20,6 +20,8 @@ jobs:
 
     - name: Install Composer dependencies
       run: composer install
+    - name: Test Connection to XAMPP
+      run: curl http://192.168.1.100
 
     - name: Replace database configuration in wp-config.php
       run: |
@@ -28,10 +30,11 @@ jobs:
         sed -i "s/password_here//g" wp-config.php
         sed -i "s/localhost/localhost/g" wp-config.php
    
-
+    - name: Deploy to XAMPP
+      run: |
+        rsync -avz --delete ./ /c/xampp/htdocs/wordpress/
   
     - name: Reload Nginx
       run: |
-        net stop nginx
-        net start nginx
+        nginx -s reload
 
