@@ -20,19 +20,15 @@ jobs:
 
     - name: Install Composer dependencies
       run: composer install
+    
 
-    - name: Prepare WordPress configuration
+    - name: Replace database configuration in wp-config.php
       run: |
-        cp wp-config-sample.php wp-config.php
         sed -i "s/database_name_here/wordpress_db/g" wp-config.php
         sed -i "s/username_here/root/g" wp-config.php
         sed -i "s/password_here//g" wp-config.php
         sed -i "s/localhost/localhost/g" wp-config.php
+    
 
-    - name: Deploy to XAMPP
-      run: |
-        rsync -avz --delete ./ /c/xampp/htdocs/wordpress/
+    
 
-    - name: Reload Nginx
-      run: |
-        sudo systemctl reload nginx  # Khởi động lại Nginx để áp dụng thay đổi
