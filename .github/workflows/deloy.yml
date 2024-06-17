@@ -32,7 +32,7 @@ jobs:
 
     - name: Deploy to XAMPP
       run: |
-        rsync -avzR  --delete . /c/xampp/htdocs/wordpress/
+        rsync -avzR   . /c/xampp/htdocs/wordpress/
   
     - name: Reload Nginx
       run: |
