@@ -24,4 +24,4 @@ jobs:
 
     - name: Run PHPCS
       run: |
-        $HOME/.composer/vendor/bin/phpcs helloworld.php
+        $HOME/.composer/vendor/bin/phpcs helloworl.php
