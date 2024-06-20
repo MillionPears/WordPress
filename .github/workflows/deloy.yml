@@ -18,9 +18,14 @@ jobs:
     - name: Get list of changed PHP files
       id: changed-files
       run: |
+        echo "Getting list of changed PHP files..."
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.php$' || true)
         echo "Changed PHP files: $CHANGED_FILES"
         echo "::set-output name=files::$CHANGED_FILES"
+
+    - name: Debug changed files
+      run: |
+        echo "Changed files: ${{ steps.changed-files.outputs.files }}"
 
     - name: Run PHP Lint
       run: |
