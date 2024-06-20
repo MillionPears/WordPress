@@ -24,6 +24,9 @@ jobs:
       - name: Install Composer
         run: sudo apt-get install -y composer
 
+      - name: Allow Composer Plugin
+        run: composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+
       - name: Install dependencies
         run: composer install
 
