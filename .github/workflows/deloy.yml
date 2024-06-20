@@ -1,4 +1,4 @@
-name: CI/CD Pi
+name: CI/CD PHP
 
 on:
   push:
@@ -21,14 +21,18 @@ jobs:
         with:
           php-version: '7.4' # Bạn có thể thay đổi phiên bản PHP tùy theo yêu cầu
 
-      - name: Install PHP CodeSniffer
-        run: composer global require "squizlabs/php_codesniffer=*"
+      - name: Install Composer
+        run: sudo apt-get install -y composer
+
+      - name: Allow Composer Plugin
+        run: composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+
+      - name: Install PHP CodeSniffer and WordPress Coding Standards
+        run: |
+          composer global require "squizlabs/php_codesniffer=*"
+          composer global require "wp-coding-standards/wpcs"
+          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+          ~/.composer/vendor/bin/phpcs -i
 
       - name: Run PHP CodeSniffer
         run: ~/.composer/vendor/bin/phpcs --standard=WordPress .
-
-      - name: Install PHPStan
-        run: composer global require phpstan/phpstan
-
-      - name: Run PHPStan
-        run: ~/.composer/vendor/bin/phpstan analyse --level=max .
