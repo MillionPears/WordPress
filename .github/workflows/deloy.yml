@@ -15,15 +15,17 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Get list of changed PHP files
+    - name: Get list of changed files
       id: changed-files
       run: |
         git fetch origin main:refs/remotes/origin/main
-        git diff --name-only origin/main ${{ github.sha }} | grep '\.php$' > changed_files.txt || echo "No PHP files changed or an error occurred."
+        git diff --name-only origin/main ${{ github.sha }} > all_changed_files.txt
+        cat all_changed_files.txt
 
-    - name: Display changed files
+    - name: Filter PHP files
       run: |
-        echo "Changed PHP files:"
+        grep '\.php$' all_changed_files.txt > changed_files.txt || echo "No PHP files changed or an error occurred."
+        echo "Filtered PHP files:"
         cat changed_files.txt
 
     - name: Run PHP Lint
