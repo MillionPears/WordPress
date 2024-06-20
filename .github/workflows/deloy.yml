@@ -21,8 +21,15 @@ jobs:
         with:
           php-version: '7.4' # Bạn có thể thay đổi phiên bản PHP tùy theo yêu cầu
 
-      - name: Install PHP CodeSniffer
-        run: composer global require "squizlabs/php_codesniffer=*"
+      - name: Install Composer
+        run: sudo apt-get install -y composer
+
+      - name: Install PHP CodeSniffer and WordPress Coding Standards
+        run: |
+          composer global require "squizlabs/php_codesniffer=*"
+          composer global require "wp-coding-standards/wpcs"
+          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+          ~/.composer/vendor/bin/phpcs -i
 
       - name: Run PHP CodeSniffer
         run: ~/.composer/vendor/bin/phpcs --standard=WordPress .
