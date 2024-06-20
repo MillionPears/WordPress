@@ -20,6 +20,7 @@ jobs:
       run: |
         git fetch origin main:refs/remotes/origin/main
         git diff --name-only origin/main ${{ github.sha }} > all_changed_files.txt
+        echo "All changed files:"
         cat all_changed_files.txt
 
     - name: Filter PHP files
@@ -32,6 +33,7 @@ jobs:
       run: |
         if [ -s changed_files.txt ]; then
           while IFS= read -r file; do
+            echo "Checking syntax for $file"
             php -l "$file"
           done < changed_files.txt
         else
