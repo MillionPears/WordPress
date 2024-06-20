@@ -10,7 +10,8 @@
 // Prevent direct access to the file.
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
-}
+
+
 /**
  * Function to print 'Hello World'.
  */
