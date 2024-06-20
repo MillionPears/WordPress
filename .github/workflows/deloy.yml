@@ -32,7 +32,7 @@ jobs:
           composer global require "squizlabs/php_codesniffer=*"
           composer global require "wp-coding-standards/wpcs"
           composer global require "dealerdirect/phpcodesniffer-composer-installer"
-          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+          ~/.composer/vendor/bin/phpcs --config-set installed_paths $(composer global config home)/vendor/wp-coding-standards/wpcs
           ~/.composer/vendor/bin/phpcs -i
 
       - name: Run PHP CodeSniffer
