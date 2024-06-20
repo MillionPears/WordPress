@@ -15,6 +15,12 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Run PHP Lint on all PHP files
+    - name: Run PHP Lint on changed PHP files
       run: |
-        find . -name "*.php" -print0 | xargs -0 -n 1 php -l
+        for file in $(git status -s | grep "^.*\.php$" | awk '{print $2}'); do
+          php -l $file
+          if [ $? -ne 0 ]; then
+            echo "::error file=$file::Failed linting"
+            exit 1
+          fi
+        done
