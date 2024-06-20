@@ -24,7 +24,12 @@ jobs:
 
     - name: Run PHP Lint
       run: |
+        if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
+          echo "No PHP files changed."
+          exit 0
+        fi
         for file in ${{ steps.changed-files.outputs.files }}; do
+          echo "Checking syntax of $file"
           php -l $file
           if [ $? -ne 0 ]; then
             echo "Syntax error in $file"
