@@ -18,7 +18,8 @@ jobs:
     - name: Get list of changed PHP files
       id: changed-files
       run: |
-        git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} | grep '\.php$' > changed_files.txt
+        git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+        git diff --name-only origin/${{ github.base_ref }} ${{ github.sha }} | grep '\.php$' > changed_files.txt
 
     - name: Run PHP Lint
       run: |
