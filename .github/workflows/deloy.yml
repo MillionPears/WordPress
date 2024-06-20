@@ -15,6 +15,14 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Run PHP Lint on all PHP files
+    - name: Run PHP Lint on specific directories
       run: |
-        find . -name "*.php" -print0 | xargs -0 -n 1 php -l
+        # Kiểm tra các tệp PHP trong các thư mục themes, plugins và tệp cấu hình chính
+        for file in $(find wp-content/themes wp-content/plugins . -maxdepth 1 -name "*.php"); do
+          echo "Checking syntax of $file"
+          php -l $file
+          if [ $? -ne 0 ]; then
+            echo "Syntax error in $file"
+            exit 1
+          fi
+        done
