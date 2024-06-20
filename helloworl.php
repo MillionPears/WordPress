@@ -14,11 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Function to print 'Hello World'.
  */
-function print_hello_world() {
-    echo 'Hello World';
+function printHelloWorld() { // Lỗi: tên hàm không tuân thủ chuẩn snake_case
+    echo 'Hello World'; // Lỗi: thiếu khoảng trắng trước và sau dấu ngoặc đơn
 }
 
-
 // Hook the function to 'wp_footer' action.
-add_action( 'wp_footer', 'print_hello_world' );
+add_action( 'wp_footer', 'printHelloWorld' ); // Lỗi: tên hàm không tuân thủ chuẩn snake_case
 ?>
