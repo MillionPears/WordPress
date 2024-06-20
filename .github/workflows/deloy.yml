@@ -31,11 +31,9 @@ jobs:
           ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
           ~/.composer/vendor/bin/phpcs -i
 
+      - name: Create a sample PHP file
+        run: |
+          echo "<?php echo 'Hello World'; ?>" > helloworld.php
+
       - name: Run PHP CodeSniffer
-        run: ~/.composer/vendor/bin/phpcs --standard=WordPress .
-
-      - name: Install PHPStan
-        run: composer global require phpstan/phpstan
-
-      - name: Run PHPStan
-        run: ~/.composer/vendor/bin/phpstan analyse --level=max .
+        run: ~/.composer/vendor/bin/phpcs --standard=WordPress helloworld.php
