@@ -9,6 +9,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -18,15 +20,11 @@ jobs:
     - name: Get list of changed PHP files
       id: changed-files
       run: |
-        # Fetch all history for all branches and tags
-        git fetch --prune --unshallow
-        git fetch origin +refs/heads/*:refs/remotes/origin/*
-
         # Determine the base commit
         if [ "${{ github.event.pull_request.base.sha }}" != "" ]; then
           BASE_COMMIT="${{ github.event.pull_request.base.sha }}"
         else
-          BASE_COMMIT=$(git merge-base origin/main ${{ github.sha }})
+          BASE_COMMIT="origin/main"
         fi
 
         # Get the list of changed PHP files
