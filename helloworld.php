@@ -12,10 +12,7 @@ class HelloWorld
     }
 }
 
-function run(): void
-{
+if (__FILE__ == realpath($_SERVER['SCRIPT_FILENAME'])) {
     $helloWorld = new HelloWorld();
     $helloWorld->sayHello();
 }
-
-run();
