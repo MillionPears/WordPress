@@ -26,7 +26,7 @@ jobs:
         if [ "${{ github.event.pull_request.base.sha }}" != "" ]; then
           BASE_COMMIT="${{ github.event.pull_request.base.sha }}"
         else
-          BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} ${{ github.sha }})
+          BASE_COMMIT=$(git merge-base origin/main ${{ github.sha }})
         fi
 
         # Get the list of changed PHP files
