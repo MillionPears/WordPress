@@ -12,5 +12,10 @@ class HelloWorld
     }
 }
 
-$helloWorld = new HelloWorld();
-$helloWorld->sayHello();
+function run(): void
+{
+    $helloWorld = new HelloWorld();
+    $helloWorld->sayHello();
+}
+
+run();
