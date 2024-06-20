@@ -1,44 +1,27 @@
-name: PHP Lint
+name: PHPCS WordPress Coding Standards
 
-on:
-  push:
-    paths:
-      - '**/*.php'
-  pull_request:
-    paths:
-      - '**/*.php'
+on: [push, pull_request]
 
 jobs:
   phpcs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4' # Bạn có thể thay đổi phiên bản PHP nếu cần
 
-      - name: Install Composer
-        run: sudo apt-get install -y composer
+    - name: Install PHPCS and WPCS
+      run: |
+        composer global require "squizlabs/php_codesniffer=*"
+        git clone -b master https://github.com/WordPress/WordPress-Coding-Standards.git $HOME/wpcs
+        $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/wpcs
+        $HOME/.composer/vendor/bin/phpcs --config-set default_standard WordPress
 
-      - name: Allow Composer Plugin
-        run: composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-
-      - name: Install dependencies
-        run: composer install
-
-      - name: Get list of changed files
-        id: changed-files
-        run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
-          git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} > changed_files.txt
-      - name: Run PHP CodeSniffer
-        run: |
-          if [ -s changed_files.txt ]; then
-            vendor/bin/phpcs --standard=WordPress $(cat changed_files.txt | tr '\n' ' ')
-          else
-            echo "No PHP files changed."
-          fi
+    - name: Run PHPCS
+      run: |
+        $HOME/.composer/vendor/bin/phpcs helloworld.php
