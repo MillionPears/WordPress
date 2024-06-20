@@ -15,27 +15,17 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Get list of changed files
-      id: changed-files
+    - name: Find PHP files changed
+      id: files
       run: |
-        git fetch origin main:refs/remotes/origin/main
-        git diff --name-only origin/main ${{ github.sha }} > all_changed_files.txt
-        echo "All changed files:"
-        cat all_changed_files.txt
+        echo "PHP_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.php$' | xargs)" >> $GITHUB_ENV
 
-    - name: Filter PHP files
+    - name: Run PHP Lint on changed PHP files
       run: |
-        grep '\.php$' all_changed_files.txt > changed_files.txt || echo "No PHP files changed or an error occurred."
-        echo "Filtered PHP files:"
-        cat changed_files.txt
-
-    - name: Run PHP Lint
-      run: |
-        if [ -s changed_files.txt ]; then
-          while IFS= read -r file; do
-            echo "Checking syntax for $file"
-            php -l "$file"
-          done < changed_files.txt
-        else
-          echo "No PHP files changed."
-        fi
+        for file in $PHP_FILES; do
+          php -l $file
+          if [ $? -ne 0 ]; then
+            echo "::error file=$file::Failed linting"
+            exit 1
+          fi
+        done
