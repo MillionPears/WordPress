@@ -1,13 +1,6 @@
 {
     "require-dev": {
-      "squizlabs/php_codesniffer": "*",
-      "wp-coding-standards/wpcs": "*",
-      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
-    },
-    "scripts": {
-      "post-install-cmd": [
-        "vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs"
-      ]
+      "squizlabs/php_codesniffer": "*"
     }
   }
   
