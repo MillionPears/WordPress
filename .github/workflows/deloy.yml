@@ -9,39 +9,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Lấy toàn bộ lịch sử commit
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '7.4'
 
-    - name: Get list of changed PHP files
-      id: changed-files
+    - name: Run PHP Lint on all PHP files
       run: |
-        echo "Getting list of changed PHP files..."
-        git fetch origin main
-        CHANGED_FILES=$(git diff --name-only origin/main | grep '\.php$' || true)
-        echo "Changed PHP files: $CHANGED_FILES"
-        echo "files=$CHANGED_FILES" >> $GITHUB_ENV
-
-    - name: Debug changed files
-      run: |
-        echo "Changed files: ${{ env.files }}"
-
-    - name: Run PHP Lint
-      run: |
-        if [ -z "${{ env.files }}" ]; then
-          echo "No PHP files changed."
-          exit 0
-        fi
-        for file in ${{ env.files }}; do
-          echo "Checking syntax of $file"
-          php -l $file
-          if [ $? -ne 0 ]; then
-            echo "Syntax error in $file"
-            exit 1
-          fi
-        done
-      if: env.files != ''
+        find . -name "*.php" -print0 | xargs -0 -n 1 php -l
