@@ -18,27 +18,12 @@ jobs:
     - name: Get list of changed PHP files
       id: changed-files
       run: |
-        # Get the list of changed PHP files in the current commit
-        CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '\.php$')
-        
-        # Output the list of changed files
-        echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.php$' || true)
+        echo "::set-output name=files::$CHANGED_FILES"
 
-    - name: Run PHP Lint on changed PHP files
+    - name: Run PHP Lint
       run: |
-        # Check if there are any PHP files to lint
-        if [ -z "$changed_files" ]; then
-          echo "No PHP files changed."
-          exit 0
-        fi
-        
-        # Run lint on each changed PHP file
-        for file in $changed_files; do
+        for file in ${{ steps.changed-files.outputs.files }}; do
           php -l $file
-          if [ $? -ne 0 ]; then
-            echo "::error file=$file::Failed linting"
-            exit 1
-          fi
         done
-      env:
-        changed_files: ${{ env.changed_files }}
+      if: steps.changed-files.outputs.files != ''
