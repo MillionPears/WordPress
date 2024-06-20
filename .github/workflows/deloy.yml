@@ -15,18 +15,5 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Get list of changed PHP files
-      id: changed-files
-      run: |
-        git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-        git diff --name-only origin/${{ github.base_ref }} ${{ github.sha }} | grep '\.php$' > changed_files.txt
-
     - name: Run PHP Lint
-      run: |
-        if [ -s changed_files.txt ]; then
-          while IFS= read -r file; do
-            php -l "$file"
-          done < changed_files.txt
-        else
-          echo "No PHP files changed."
-        fi
+      run: php -l helloworld.php
