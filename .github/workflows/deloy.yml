@@ -17,7 +17,17 @@ jobs:
 
     - name: Run PHP Lint on changed PHP files
       run: |
-        for file in $(git status -s | grep "^.*\.php$" | awk '{print $2}'); do
+        # Get the list of changed PHP files
+        changed_files=$(git diff --name-only --diff-filter=ACMRT HEAD~1 | grep '\.php$')
+        
+        # Check if there are any PHP files to lint
+        if [ -z "$changed_files" ]; then
+          echo "No PHP files changed."
+          exit 0
+        fi
+        
+        # Run lint on each changed PHP file
+        for file in $changed_files; do
           php -l $file
           if [ $? -ne 0 ]; then
             echo "::error file=$file::Failed linting"
