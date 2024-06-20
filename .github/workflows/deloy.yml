@@ -15,13 +15,17 @@ jobs:
       with:
         php-version: '7.4'
 
+    - name: Install Composer
+      run: sudo apt-get install -y composer
+
     - name: Install PHPCS and WPCS
       run: |
         composer global require "squizlabs/php_codesniffer=*"
         git clone -b develop https://github.com/WordPress/WordPress-Coding-Standards.git $HOME/wpcs
-        $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/wpcs
+        git clone https://github.com/PHPCSStandards/PHPCSUtils.git $HOME/PHPCSUtils
+        $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/wpcs,$HOME/PHPCSUtils
         $HOME/.composer/vendor/bin/phpcs --config-set default_standard WordPress
 
     - name: Run PHPCS
       run: |
-        $HOME/.composer/vendor/bin/phpcs helloworl.php
+        $HOME/.composer/vendor/bin/phpcs helloworld.php
