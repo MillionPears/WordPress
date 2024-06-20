@@ -19,7 +19,12 @@ jobs:
       id: changed-files
       run: |
         git fetch origin main:refs/remotes/origin/main
-        git diff --name-only origin/main ${{ github.sha }} | grep '\.php$' > changed_files.txt
+        git diff --name-only origin/main ${{ github.sha }} | grep '\.php$' > changed_files.txt || echo "No PHP files changed or an error occurred."
+
+    - name: Display changed files
+      run: |
+        echo "Changed PHP files:"
+        cat changed_files.txt
 
     - name: Run PHP Lint
       run: |
