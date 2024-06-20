@@ -1,15 +1,15 @@
-name: CI/CD PHP
+name: PHP Lint
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - '**/*.php'
   pull_request:
-    branches:
-      - main
+    paths:
+      - '**/*.php'
 
 jobs:
-  lint:
+  phpcs:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,18 +21,8 @@ jobs:
         with:
           php-version: '7.4' # Bạn có thể thay đổi phiên bản PHP tùy theo yêu cầu
 
-      - name: Install Composer
-        run: sudo apt-get install -y composer
-
-      - name: Allow Composer Plugin
-        run: composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-
-      - name: Install PHP CodeSniffer and WordPress Coding Standards
-        run: |
-          composer global require "squizlabs/php_codesniffer=*"
-          composer global require "wp-coding-standards/wpcs"
-          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
-          ~/.composer/vendor/bin/phpcs -i
+      - name: Install dependencies
+        run: composer install
 
       - name: Run PHP CodeSniffer
-        run: ~/.composer/vendor/bin/phpcs --standard=WordPress .
+        run: vendor/bin/phpcs --standard=WordPress .
