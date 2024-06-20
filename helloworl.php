@@ -19,6 +19,7 @@ function print_hello_world() {
     echo 'Hello World';
 }
 
+
 // Hook the function to 'wp_footer' action.
 add_action( 'wp_footer', 'print_hello_world' );
 ?>
