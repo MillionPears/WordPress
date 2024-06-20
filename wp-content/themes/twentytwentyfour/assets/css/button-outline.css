@@ -3,4 +3,4 @@
 	background-color: var(--wp--preset--color--contrast-2, var(--wp--preset--color--contrast, transparent));
 	color: var(--wp--preset--color--base);
 	border-color: var(--wp--preset--color--contrast-2, var(--wp--preset--color--contrast, currentColor));
-
+}
