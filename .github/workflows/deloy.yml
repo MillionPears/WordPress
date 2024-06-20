@@ -19,21 +19,21 @@ jobs:
       id: changed-files
       run: |
         echo "Getting list of changed PHP files..."
-        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.php$' || true)
+        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep '\.php$' || true)
         echo "Changed PHP files: $CHANGED_FILES"
-        echo "::set-output name=files::$CHANGED_FILES"
+        echo "files=$CHANGED_FILES" >> $GITHUB_ENV
 
     - name: Debug changed files
       run: |
-        echo "Changed files: ${{ steps.changed-files.outputs.files }}"
+        echo "Changed files: ${{ env.files }}"
 
     - name: Run PHP Lint
       run: |
-        if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
+        if [ -z "${{ env.files }}" ]; then
           echo "No PHP files changed."
           exit 0
         fi
-        for file in ${{ steps.changed-files.outputs.files }}; do
+        for file in ${{ env.files }}; do
           echo "Checking syntax of $file"
           php -l $file
           if [ $? -ne 0 ]; then
@@ -41,4 +41,4 @@ jobs:
             exit 1
           fi
         done
-      if: steps.changed-files.outputs.files != ''
+      if: env.files != ''
