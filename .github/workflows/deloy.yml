@@ -15,11 +15,28 @@ jobs:
       with:
         php-version: '7.4'
 
+    - name: Get list of changed PHP files
+      id: changed-files
+      run: |
+        # Fetch all history for all branches and tags
+        git fetch --prune --unshallow
+        git fetch origin +refs/heads/*:refs/remotes/origin/*
+
+        # Determine the base commit
+        if [ "${{ github.event.pull_request.base.sha }}" != "" ]; then
+          BASE_COMMIT="${{ github.event.pull_request.base.sha }}"
+        else
+          BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} ${{ github.sha }})
+        fi
+
+        # Get the list of changed PHP files
+        CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRT $BASE_COMMIT ${{ github.sha }} | grep '\.php$')
+        
+        # Output the list of changed files
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
+
     - name: Run PHP Lint on changed PHP files
       run: |
-        # Get the list of changed PHP files
-        changed_files=$(git diff --name-only --diff-filter=ACMRT HEAD~1 | grep '\.php$')
-        
         # Check if there are any PHP files to lint
         if [ -z "$changed_files" ]; then
           echo "No PHP files changed."
@@ -34,3 +51,5 @@ jobs:
             exit 1
           fi
         done
+      env:
+        changed_files: ${{ env.changed_files }}
