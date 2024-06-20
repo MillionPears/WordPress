@@ -21,6 +21,9 @@ jobs:
         with:
           php-version: '7.4' # Bạn có thể thay đổi phiên bản PHP tùy theo yêu cầu
 
+      - name: Install Composer
+        run: sudo apt-get install -y composer
+
       - name: Install dependencies
         run: composer install
 
