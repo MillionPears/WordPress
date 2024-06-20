@@ -9,6 +9,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Lấy toàn bộ lịch sử commit
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -19,7 +21,8 @@ jobs:
       id: changed-files
       run: |
         echo "Getting list of changed PHP files..."
-        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep '\.php$' || true)
+        git fetch origin main
+        CHANGED_FILES=$(git diff --name-only origin/main | grep '\.php$' || true)
         echo "Changed PHP files: $CHANGED_FILES"
         echo "files=$CHANGED_FILES" >> $GITHUB_ENV
 
