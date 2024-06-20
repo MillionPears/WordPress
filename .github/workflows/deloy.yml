@@ -24,17 +24,23 @@ jobs:
       - name: Install Composer
         run: sudo apt-get install -y composer
 
-      - name: Allow Composer Plugin
-        run: composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-
       - name: Install dependencies
         run: composer install
+
+      - name: Install WordPress Coding Standards
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          composer require --dev wp-coding-standards/wpcs
+          vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs
 
       - name: Get list of changed files
         id: changed-files
         run: |
           git fetch origin ${{ github.base_ref }} --depth=1
           git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} > changed_files.txt
+
+      - name: Display changed files
+        run: cat changed_files.txt
 
       - name: Run PHP CodeSniffer
         run: |
